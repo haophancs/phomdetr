@@ -120,7 +120,7 @@ def build(image_set, args):
     im_set = image_set
     if args.test:
         im_set = "test"
-    ann_file = Path(args.VICLEVR_ann_path) / f"VICLEVR_{im_set}_questions.json"
+    ann_file = Path(args.viclevr_ann_path) / f"VICLEVR_{im_set}_questions.json"
     img_dir = Path(args.viclevr_img_path) / f"{im_set}"
 
     print("loading ", img_dir, ann_file)
