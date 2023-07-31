@@ -2,14 +2,14 @@
 ## Download dataset
 ```
 gdown 1nn7ZehICLvwaNEuu6tll3h73523ke77O
-unzip viclevr.zip
+unzip VICLEVR.zip
 ```
 ## Installation
 ```
 git clone https://github.com/haophancs/mdetr
 cd /path/to/mdetr
 pip install -r requirements.txt
-mkdir viclevr
+mkdir VICLEVR
 ```
 
 ## Training
