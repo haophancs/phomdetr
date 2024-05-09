@@ -4,8 +4,7 @@
 git clone https://github.com/haophancs/mdetr
 cd /path/to/mdetr
 pip install -r requirements.txt
-mkdir datasets
-mkdir -p outputs/viclevr
+mkdir viclevr_datasets viclevr_outputs
 ```
 
 ## Download dataset
@@ -23,7 +22,7 @@ python main.py \
   --num_queries 25 \
   --schedule linear_with_warmup \
   --text_encoder_type vinai/phobert-base \
-  --output_dir outputs/viclevr \
+  --output_dir viclevr_outputs \
   --lr 5e-5 \
   --lr_backbone 5e-5 \
   --text_encoder_lr 5e-5 \
