@@ -36,12 +36,20 @@ python main.py \
 ## Evaluation
 ```
 python main.py \
-  --batch_size 32 \
   --dataset_config configs/viclevr.json \
+  --backbone "resnet18" \
   --num_queries 25 \
+  --schedule linear_with_warmup \
   --text_encoder_type vinai/phobert-base \
-  --backbone resnet18 \
-  --resume viclevr/BEST_checkpoint.pth \
-  --eval \
-  --test
+  --output_dir viclevr_outputs \
+  --lr 5e-5 \
+  --lr_backbone 5e-5 \
+  --text_encoder_lr 5e-5 \
+  --batch_size 16 \
+  --epochs 30 \
+  --weight_decay 0.01 \
+  --dropout 0.5 \
+  --seed 42 \
+  --resume viclevr_outputs/BEST_checkpoint.pth \
+  --eval
 ```
