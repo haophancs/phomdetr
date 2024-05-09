@@ -446,6 +446,10 @@ class QACriterionClevr(nn.Module):
             if answer_decoder:
                 ground_answers = list(map(answer_decoder, zip(
                     ground_answers,
+                    answers["answer_type"]
+                )))
+                pred_answers = list(map(answer_decoder, zip(
+                    pred_answers,
                     output["pred_answer_type"].argmax(-1).detach().cpu().numpy().tolist()
                 )))
             return loss, ground_answers, pred_answers
