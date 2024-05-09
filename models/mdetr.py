@@ -444,14 +444,10 @@ class QACriterionClevr(nn.Module):
         ###################
         if return_ga_pa:
             if answer_decoder:
-                ground_answers = list(map(answer_decoder, zip(
-                    ground_answers,
-                    answers["answer_type"]
-                )))
-                pred_answers = list(map(answer_decoder, zip(
-                    pred_answers,
-                    output["pred_answer_type"].argmax(-1).detach().cpu().numpy().tolist()
-                )))
+                pred_answers_type = output["pred_answer_type"].argmax(-1).detach().cpu().numpy().tolist()
+                for i in range(len(ground_answers)):
+                    ground_answers[i] = answer_decoder(ground_answers[i], answers["answer_type"][i])
+                    pred_answers[i] = answer_decoder(pred_answers[i], pred_answers_type[i])
             return loss, ground_answers, pred_answers
         return loss
 
