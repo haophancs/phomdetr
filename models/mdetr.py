@@ -426,8 +426,8 @@ class QACriterionClevr(nn.Module):
         pred_answers = [
             (output["pred_answer_binary"][i].sigmoid() > 0.5).long() if is_pred_binary[i]
             else (
-                output["pred_answer_attr"][i].argmax(-1) if is_pred_attr[i]
-                else output["pred_answer_reg"][i].argmax(-1)
+                output["pred_answer_attr"][i].argmax(-1).long() if is_pred_attr[i]
+                else output["pred_answer_reg"][i].argmax(-1).long()
             )
             for i in range(len(answers))
         ]
