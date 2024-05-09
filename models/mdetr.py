@@ -424,10 +424,10 @@ class QACriterionClevr(nn.Module):
         is_pred_attr = output["pred_answer_type"].argmax(-1) == 1
         is_pred_reg = output["pred_answer_type"].argmax(-1) == 2
         pred_answers = [
-            output["pred_answer_binary"][i] if is_pred_binary[i]
+            (output["pred_answer_binary"][i].sigmoid() > 0.5).long() if is_pred_binary[i]
             else (
-                output["pred_answer_attr"][i] if is_pred_attr[i]
-                else output["pred_answer_reg"][i]
+                output["pred_answer_attr"][i].argmax(-1) if is_pred_attr[i]
+                else output["pred_answer_reg"][i].argmax(-1)
             )
             for i in range(len(answers))
         ]
