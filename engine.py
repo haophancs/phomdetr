@@ -174,6 +174,7 @@ def evaluate(
             loss_dict["contrastive_loss"] = contrastive_loss
 
         if qa_criterion is not None:
+            torch.save(answers, "answers.pth")
             answer_losses, ground_answers, pred_answers = qa_criterion(outputs, answers, return_ga_pa=True)
             loss_dict.update(answer_losses)
             all_ground_answers.extend(ground_answers)
@@ -202,7 +203,7 @@ def evaluate(
                 evaluator.update(res)
 
     if args.test:
-        with open('ground_and_pred_answers.json', 'w') as f:
+        with open(os.path.join(args.output_dir, 'ground_and_pred_answers.json'), 'w') as f:
             json.dump({'ground_answers': all_ground_answers, 'pred_answers': all_pred_answers}, f, indent=4)
 
     # gather the stats from all processes
