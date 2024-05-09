@@ -442,6 +442,7 @@ class QACriterionClevr(nn.Module):
         loss['report_macro_precision'] = report['macro avg']['precision']
         loss['report_macro_recall'] = report['macro avg']['recall']
         ###################
+        print(answers['answer_type'], ground_answers, len(pred_answers))
         if return_ga_pa:
             if answer_decoder:
                 pred_answers_type = output["pred_answer_type"].argmax(-1).detach().cpu().numpy().tolist()
