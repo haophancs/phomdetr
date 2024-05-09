@@ -362,7 +362,7 @@ class QACriterionClevr(nn.Module):
     def __init__(self):
         super().__init__()
 
-    def forward(self, output, answers, return_ga_pa=False):
+    def forward(self, output, answers, return_ga_pa=False, answer_decoder=None):
         loss = {}
         loss["loss_answer_type"] = F.cross_entropy(output["pred_answer_type"], answers["answer_type"])
 
@@ -431,8 +431,8 @@ class QACriterionClevr(nn.Module):
             )
             for i in range(len(answers))
         ]
-        ground_answers = list(map(lambda value: str(value.detach().cpu().numpy().tolist()), ground_answers))
-        pred_answers = list(map(lambda value: str(value.detach().cpu().numpy().tolist()), pred_answers))
+        ground_answers = list(map(lambda value: value.detach().cpu().numpy().tolist(), ground_answers))
+        pred_answers = list(map(lambda value: value.detach().cpu().numpy().tolist(), pred_answers))
         report = classification_report(ground_answers, pred_answers, output_dict=True, zero_division=0)
         loss['report_accuracy'] = report['accuracy']
         loss['report_weighted_f1'] = report['weighted avg']['f1-score']
@@ -443,6 +443,11 @@ class QACriterionClevr(nn.Module):
         loss['report_macro_recall'] = report['macro avg']['recall']
         ###################
         if return_ga_pa:
+            if answer_decoder:
+                ground_answers = list(map(answer_decoder, zip(
+                    ground_answers,
+                    output["pred_answer_type"].argmax(-1).detach().cpu().numpy().tolist()
+                )))
             return loss, ground_answers, pred_answers
         return loss
 

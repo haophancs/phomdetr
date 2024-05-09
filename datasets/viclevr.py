@@ -65,6 +65,9 @@ class ViClevrQuestion(torch.utils.data.Dataset):
         with open(ann_file, "r") as f:
             self.questions = json.load(f)["questions"]
 
+    def decode_answer(self, encoded_answer: int, answer_type: int):
+        return decode_answer(encoded_answer, answer_type)
+
     def __len__(self):
         return len(self.questions)
 

@@ -154,7 +154,6 @@ def evaluate(
         targets = batch_dict["targets"]
         answers = {k: v.to(device) for k, v in batch_dict["answers"].items()} if "answers" in batch_dict else None
         captions = [t["caption"] for t in targets]
-
         targets = targets_to(targets, device)
 
         memory_cache = None
@@ -174,8 +173,12 @@ def evaluate(
             loss_dict["contrastive_loss"] = contrastive_loss
 
         if qa_criterion is not None:
-            torch.save(answers, "answers.pth")
-            answer_losses, ground_answers, pred_answers = qa_criterion(outputs, answers, return_ga_pa=True)
+            answer_losses, ground_answers, pred_answers = qa_criterion(
+                outputs,
+                answers,
+                return_ga_pa=True,
+                answer_decoder=data_loader.dataset.decode_answer,
+            )
             loss_dict.update(answer_losses)
             all_ground_answers.extend(ground_answers)
             all_pred_answers.extend(pred_answers)
