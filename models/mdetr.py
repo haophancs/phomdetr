@@ -413,10 +413,10 @@ class QACriterionClevr(nn.Module):
 
         ###################
         ground_answers = [
-            answers["answer_binary"][i] if is_binary[i]
+            answers["answer_binary"][i].long() if is_binary[i]
             else (
-                answers["answer_attr"][i] if is_attr[i]
-                else answers["answer_reg"][i]
+                answers["answer_attr"][i].long() if is_attr[i]
+                else answers["answer_reg"][i].long()
             )
             for i in range(len(answers))
         ]

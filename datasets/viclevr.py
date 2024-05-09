@@ -27,7 +27,7 @@ ALL_ATTRIBUTES = [
 ]
 
 
-def _encode_answer(target, answer):
+def encode_answer(target, answer):
     if answer in ["có", "không"]:
         target["answer_type"] = torch.as_tensor(0, dtype=torch.long)
         target["answer_binary"] = torch.as_tensor(0.0 if answer == "không" else 1.0)
@@ -44,6 +44,17 @@ def _encode_answer(target, answer):
         target["answer_attr"] = torch.as_tensor(-100, dtype=torch.long)
         target["answer_reg"] = torch.as_tensor(int(answer), dtype=torch.long)
     return target
+
+
+def decode_answer(encoded_answer: int, answer_type: int):
+    assert answer_type in [0, 1, 2]
+    if answer_type == 0:
+        assert encoded_answer in [0, 1]
+        return ["không", "có"][encoded_answer]
+    if answer_type == 1:
+        assert encoded_answer in range(len(ALL_ATTRIBUTES))
+        return ALL_ATTRIBUTES[encoded_answer]
+    return int(encoded_answer)
 
 
 class ViClevrQuestion(torch.utils.data.Dataset):
@@ -65,7 +76,7 @@ class ViClevrQuestion(torch.utils.data.Dataset):
             "caption": question["question"],
         }
         if "answer" in question:
-            target = _encode_answer(target, question["answer"])
+            target = encode_answer(target, question["answer"])
 
         if self.transforms is not None:
             img, _ = self.transforms(

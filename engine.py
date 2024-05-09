@@ -148,8 +148,6 @@ def evaluate(
     all_ground_answers = []
     all_pred_answers = []
 
-    with open('foo1.txt', 'w') as f:
-        f.write(str(len(data_loader)))
     for batch_dict in metric_logger.log_every(data_loader, 10, header):
         samples = batch_dict["samples"].to(device)
         positive_map = batch_dict["positive_map"].to(device) if "positive_map" in batch_dict else None
@@ -180,8 +178,6 @@ def evaluate(
             loss_dict.update(answer_losses)
             all_ground_answers.extend(ground_answers)
             all_pred_answers.extend(pred_answers)
-            with open('foo1.txt', 'w') as f:
-                f.write(str(len(ground_answers)) + ' ' + str(len(pred_answers)))
 
         # reduce losses over all GPUs for logging purposes
         loss_dict_reduced = dist.reduce_dict(loss_dict)
@@ -205,7 +201,7 @@ def evaluate(
             for evaluator in evaluator_list:
                 evaluator.update(res)
 
-    if args.eval:
+    if args.test:
         with open('ground_and_pred_answers.json', 'w') as f:
             json.dump({'ground_answers': all_ground_answers, 'pred_answers': all_pred_answers}, f, indent=4)
 
