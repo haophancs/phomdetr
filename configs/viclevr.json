@@ -1,8 +1,8 @@
 {
     "combine_datasets": ["viclevr"],
     "combine_datasets_val": ["viclevr"],
-    "viclevr_img_path": "./viclevr_datasets/VICLEVR/images",
-    "viclevr_ann_path": "./viclevr_datasets/VICLEVR/questions",
+    "viclevr_img_path": "./datasets/VICLEVR/images",
+    "viclevr_ann_path": "./datasets/VICLEVR/questions",
     "split_qa_heads": 1,
     "no_detection": 1,
     "do_qa": 1
