@@ -418,7 +418,7 @@ class QACriterionClevr(nn.Module):
                 answers["answer_attr"][i].long() if is_attr[i]
                 else answers["answer_reg"][i].long()
             )
-            for i in range(len(answers))
+            for i in range(len(answers["answer_type"]))
         ]
         is_pred_binary = output["pred_answer_type"].argmax(-1) == 0
         is_pred_attr = output["pred_answer_type"].argmax(-1) == 1
@@ -429,7 +429,7 @@ class QACriterionClevr(nn.Module):
                 output["pred_answer_attr"][i].argmax(-1).long() if is_pred_attr[i]
                 else output["pred_answer_reg"][i].argmax(-1).long()
             )
-            for i in range(len(answers))
+            for i in range(len(answers["answer_type"]))
         ]
         ground_answers = list(map(lambda value: value.detach().cpu().numpy().tolist(), ground_answers))
         pred_answers = list(map(lambda value: value.detach().cpu().numpy().tolist(), pred_answers))
@@ -442,7 +442,6 @@ class QACriterionClevr(nn.Module):
         loss['report_macro_precision'] = report['macro avg']['precision']
         loss['report_macro_recall'] = report['macro avg']['recall']
         ###################
-        print(answers['answer_type'], ground_answers, len(pred_answers))
         if return_ga_pa:
             if answer_decoder:
                 pred_answers_type = output["pred_answer_type"].argmax(-1).detach().cpu().numpy().tolist()
