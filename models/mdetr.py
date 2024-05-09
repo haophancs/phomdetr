@@ -448,8 +448,6 @@ class QACriterionClevr(nn.Module):
                 for i in range(len(ground_answers)):
                     ground_answers[i] = answer_decoder(ground_answers[i], answers["answer_type"][i])
                     pred_answers[i] = answer_decoder(pred_answers[i], pred_answers_type[i])
-                print(ground_answers)
-                print(pred_answers)
             return loss, ground_answers, pred_answers
         return loss
 

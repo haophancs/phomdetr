@@ -205,7 +205,7 @@ def evaluate(
             for evaluator in evaluator_list:
                 evaluator.update(res)
 
-    if args.test:
+    if args.eval:
         with open(os.path.join(args.output_dir, 'ground_and_pred_answers.json'), 'w') as f:
             json.dump({'ground_answers': all_ground_answers, 'pred_answers': all_pred_answers}, f, indent=4)
 
