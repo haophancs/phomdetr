@@ -41,7 +41,7 @@ class ViGQAQuestion(torch.utils.data.Dataset):
         answer = self.answer_map[question["question_id"]]
         image_filename = "vigqa_{0}_{1}.png".format(
             self.subset.lower(),
-            str.zfill(str(self.questions["image_id"]), 5),
+            str.zfill(str(question["image_id"]), 5),
         )
         img = Image.open(os.path.join(self.root, image_filename)).convert("RGB")
         target = {
