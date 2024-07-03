@@ -47,7 +47,7 @@ class ViGQAQuestion(torch.utils.data.Dataset):
         target = {
             "questionId": question["question_id"], "caption": question["question"],
             "answer_type": torch.as_tensor(1, dtype=torch.long),
-            "answer_binary": torch.as_tensor(0, dtype=torch.long),
+            "answer_binary": torch.as_tensor(0.0),
             "answer_attr": torch.as_tensor(self.answer2label[answer], dtype=torch.long),
             "answer_reg": torch.as_tensor(-100, dtype=torch.long),
         }
