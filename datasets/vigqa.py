@@ -10,10 +10,11 @@ import datasets.transforms as T
 
 
 class ViGQAQuestion(torch.utils.data.Dataset):
-    def __init__(self, img_folder, ques_file, ann_file, answer2label_file, transforms):
+    def __init__(self, img_folder, ques_file, ann_file, answer2label_file, subset, transforms):
         super(ViGQAQuestion, self).__init__()
         self.transforms = transforms
         self.root = img_folder
+        self.subset = subset
         with open(ques_file, "r") as f:
             self.questions = json.load(f)["questions"]
         with open(ann_file, "r") as f:
@@ -38,7 +39,11 @@ class ViGQAQuestion(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         question = self.questions[idx]
         answer = self.answer_map[question["question_id"]]
-        img = Image.open(os.path.join(self.root, question["image_filename"])).convert("RGB")
+        image_filename = "vigqa_{0}_{1}.png".format(
+            self.subset.lower(),
+            str.zfill(str(self.questions["image_id"]), 5),
+        )
+        img = Image.open(os.path.join(self.root, image_filename)).convert("RGB")
         target = {
             "questionId": question["question_id"], "caption": question["question"],
             "answer_type": torch.as_tensor(1, dtype=torch.long),
@@ -110,5 +115,6 @@ def build(image_set, args):
         ques_file=ques_file,
         ann_file=ann_file,
         answer2label_file=args.vqa_answer2label_path,
+        subset=im_set,
         transforms=make_gqa_transforms(image_set, cautious=True),
     )
