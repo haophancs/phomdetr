@@ -364,45 +364,45 @@ class QACriterionClevr(nn.Module):
 
     def forward(self, output, answers, return_ga_pa=False, answer_decoder=None):
         loss = {}
-        loss["loss_answer_type"] = F.cross_entropy(output["pred_answer_type"], answers["answer_type"])
+        loss["loss_answer_type"] = F.cross_entropy(output["pred_answer_type"].cpu(), answers["answer_type"].cpu())
 
-        type_acc = output["pred_answer_type"].argmax(-1) == answers["answer_type"]
-        loss["accuracy_answer_type"] = type_acc.sum() / answers["answer_type"].numel()
+        type_acc = output["pred_answer_type"].argmax(-1).cpu() == answers["answer_type"].cpu()
+        loss["accuracy_answer_type"] = type_acc.cpu().sum() / answers["answer_type"].cpu().numel()
 
-        is_binary = answers["answer_type"] == 0
-        is_attr = answers["answer_type"] == 1
-        is_reg = answers["answer_type"] == 2
+        is_binary = answers["answer_type"].cpu() == 0
+        is_attr = answers["answer_type"].cpu() == 1
+        is_reg = answers["answer_type"].cpu() == 2
 
         binary_norm = is_binary.sum() if is_binary.any() else 1.0
         loss["loss_answer_binary"] = (
-            F.binary_cross_entropy_with_logits(output["pred_answer_binary"], answers["answer_binary"], reduction="none")
+            F.binary_cross_entropy_with_logits(output["pred_answer_binary"].cpu(), answers["answer_binary"].cpu(), reduction="none")
             .masked_fill(~is_binary, 0)
             .sum()
             / binary_norm
         )
-        bin_acc = (output["pred_answer_binary"].sigmoid() > 0.5) == answers["answer_binary"]
+        bin_acc = (output["pred_answer_binary"].cpu().sigmoid() > 0.5) == answers["answer_binary"].cpu()
         loss["accuracy_answer_binary"] = (
-            bin_acc[is_binary].sum() / is_binary.sum() if is_binary.any() else torch.as_tensor(1.0)
+            bin_acc[is_binary].cpu().sum() / is_binary.cpu().sum() if is_binary.cpu().any() else torch.as_tensor(1.0)
         )
 
         reg_norm = is_reg.sum() if is_reg.any() else 1.0
         loss["loss_answer_reg"] = (
-            F.cross_entropy(output["pred_answer_reg"], answers["answer_reg"], reduction="none")
+            F.cross_entropy(output["pred_answer_reg"].cpu(), answers["answer_reg"].cpu(), reduction="none")
             .masked_fill(~is_reg, 0)
             .sum()
             / reg_norm
         )
-        reg_acc = (output["pred_answer_reg"].argmax(-1)) == answers["answer_reg"]
+        reg_acc = (output["pred_answer_reg"].cpu().argmax(-1)) == answers["answer_reg"].cpu()
         loss["accuracy_answer_reg"] = reg_acc[is_reg].sum() / is_reg.sum() if is_reg.any() else torch.as_tensor(1.0)
 
         attr_norm = is_attr.sum() if is_attr.any() else 1.0
         loss["loss_answer_attr"] = (
-            F.cross_entropy(output["pred_answer_attr"].argmax(-1), answers["answer_attr"], reduction="none")
+            F.cross_entropy(output["pred_answer_attr"].cpu().argmax(-1), answers["answer_attr"].cpu(), reduction="none")
             .masked_fill(~is_attr, 0)
             .sum()
             / attr_norm
         )
-        attr_acc = (output["pred_answer_attr"].argmax(-1)) == answers["answer_attr"]
+        attr_acc = (output["pred_answer_attr"].cpu().argmax(-1)) == answers["answer_attr"].cpu()
         if is_attr.any():
             correct_count = attr_acc[is_attr].sum()
             loss["accuracy_answer_attr"] = correct_count / is_attr.sum()
@@ -415,26 +415,31 @@ class QACriterionClevr(nn.Module):
 
         ###################
         ground_answers = [
-            answers["answer_binary"][i].long() if is_binary[i]
+            answers["answer_binary"][i].cpu().long() if is_binary[i]
             else (
-                answers["answer_attr"][i].long() if is_attr[i]
-                else answers["answer_reg"][i].long()
+                answers["answer_attr"][i].cpu().long() if is_attr[i]
+                else answers["answer_reg"][i].cpu().long()
             )
             for i in range(len(answers["answer_type"]))
         ]
-        is_pred_binary = output["pred_answer_type"].argmax(-1) == 0
-        is_pred_attr = output["pred_answer_type"].argmax(-1) == 1
-        is_pred_reg = output["pred_answer_type"].argmax(-1) == 2
+        is_pred_binary = output["pred_answer_type"].cpu().argmax(-1) == 0
+        is_pred_attr = output["pred_answer_type"].cpu().argmax(-1) == 1
+        is_pred_reg = output["pred_answer_type"].cpu().argmax(-1) == 2
         pred_answers = [
-            (output["pred_answer_binary"][i].sigmoid() > 0.5).long() if is_pred_binary[i]
+            (output["pred_answer_binary"][i].cpu().sigmoid() > 0.5).long() if is_pred_binary[i]
             else (
-                output["pred_answer_attr"][i].argmax(-1).long() if is_pred_attr[i]
-                else output["pred_answer_reg"][i].argmax(-1).long()
+                output["pred_answer_attr"][i].cpu().argmax(-1).long() if is_pred_attr[i]
+                else output["pred_answer_reg"][i].cpu().argmax(-1).long()
             )
             for i in range(len(answers["answer_type"]))
         ]
-        ground_answers = list(map(lambda value: value.detach().cpu().numpy().tolist(), ground_answers))
-        pred_answers = list(map(lambda value: value.detach().cpu().numpy().tolist(), pred_answers))
+        try:
+            ground_answers = list(map(lambda value: value.detach().cpu().numpy().tolist(), ground_answers))
+            pred_answers = list(map(lambda value: value.detach().cpu().numpy().tolist(), pred_answers))
+        except:
+            ground_answers = list(map(lambda value: value.numpy().tolist(), ground_answers))
+            pred_answers = list(map(lambda value: value.numpy().tolist(), pred_answers))
+
         report = classification_report(ground_answers, pred_answers, output_dict=True, zero_division=0)
         loss['report_accuracy'] = report['accuracy']
         loss['report_weighted_f1'] = report['weighted avg']['f1-score']
