@@ -100,9 +100,9 @@ def build(image_set, args):
     im_set = image_set
     if args.test:
         im_set = "test"
-    ann_file = Path(args.vigqa_ann_path) / f"vigqa_{im_set}_annotations.json"
-    ques_file = Path(args.vigqa_ann_path) / f"vigqa_{im_set}_questions.json"
-    img_dir = Path(args.vigqa_img_path) / f"{im_set}"
+    ann_file = Path(args.vqa_ann_path) / f"vigqa_{im_set}_annotations.json"
+    ques_file = Path(args.vqa_ann_path) / f"vigqa_{im_set}_questions.json"
+    img_dir = Path(args.vqa_img_path) / f"{im_set}"
 
     print("loading ", img_dir, ann_file)
     return ViGQAQuestion(
