@@ -490,7 +490,7 @@ def main(args):
                 weight_dict=weight_dict,
                 data_loader=item.dataloader,
                 evaluator_list=item.evaluator_list,
-                device=device,
+                device='cpu',
                 args=args,
             )
             test_stats.update({item.dataset_name + "_" + k: v for k, v in curr_test_stats.items()})

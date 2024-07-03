@@ -1,9 +1,9 @@
 {
     "combine_datasets": ["vigqa"],
     "combine_datasets_val": ["vigqa"],
-    "vqa_img_path": "./vigqa_datasets/vigqa",
-    "vqa_ann_path": "./vigqa_datasets/vigqa/vqa",
-    "vqa_answer2label_path": "./vigqa_datasets/vigqa/answer2label.txt",
+    "vqa_img_path": "../BartphoBeit-VQA/datasets/vigqa",
+    "vqa_ann_path": "../BartphoBeit-VQA/datasets/vigqa/vqa",
+    "vqa_answer2label_path": "../BartphoBeit-VQA/datasets/vigqa/answer2label.txt",
     "split_qa_heads": 1,
     "no_detection": 1,
     "do_qa": 1
