@@ -403,6 +403,8 @@ class QACriterionClevr(nn.Module):
             / attr_norm
         )
         attr_acc = (output["pred_answer_attr"].argmax(-1)) == answers["answer_attr"]
+        print("is_attr:", is_attr)
+        print("attr_acc:", attr_acc)
         if is_attr.any():
             correct_count = attr_acc[is_attr].sum()
             loss["accuracy_answer_attr"] = correct_count / is_attr.sum()
