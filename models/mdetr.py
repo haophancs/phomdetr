@@ -765,6 +765,7 @@ def build(args):
             "clevr_question" in args.combine_datasets
             or "viclevr" in args.combine_datasets
             or "clevr" in args.combine_datasets
+            or "vigqa" in args.combine_datasets
             or "gqa" in args.combine_datasets
         ), "Question answering require either gqa or clevr dataset"
         qa_dataset = "gqa" if "gqa" in args.combine_datasets else "clevr"
