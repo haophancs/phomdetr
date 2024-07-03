@@ -363,9 +363,6 @@ class QACriterionClevr(nn.Module):
         super().__init__()
 
     def forward(self, output, answers, return_ga_pa=False, answer_decoder=None):
-        output = {k: v.cpu() for k, v in output.items()}
-        answers = {k: v.cpu() for k, v in answers.items()}
-        answers = answers.to("cpu")
         loss = {}
         loss["loss_answer_type"] = F.cross_entropy(output["pred_answer_type"], answers["answer_type"])
 
