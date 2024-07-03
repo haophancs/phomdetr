@@ -8,24 +8,6 @@ from PIL import Image
 
 import datasets.transforms as T
 
-ALL_ATTRIBUTES = [
-    "nhỏ",
-    "lớn",
-    "xám",
-    "đỏ",
-    "xanh dương",
-    "xanh lá",
-    "nâu",
-    "tím",
-    "xanh lơ",
-    "vàng",
-    "hình lập phương",
-    "hình cầu",
-    "hình trụ",
-    "cao su",
-    "kim loại",
-]
-
 
 class ViGQAQuestion(torch.utils.data.Dataset):
     def __init__(self, img_folder, ques_file, ann_file, answer2label_file, transforms):
