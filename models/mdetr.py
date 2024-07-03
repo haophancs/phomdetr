@@ -398,7 +398,7 @@ class QACriterionClevr(nn.Module):
 
         attr_norm = is_attr.sum() if is_attr.any() else 1.0
         loss["loss_answer_attr"] = (
-            F.cross_entropy(output["pred_answer_attr"], answers["answer_attr"], reduction="none")
+            F.cross_entropy(output["pred_answer_attr"].argmax(-1).float(), answers["answer_attr"], reduction="none")
             .masked_fill(~is_attr, 0)
             .sum()
             / attr_norm
