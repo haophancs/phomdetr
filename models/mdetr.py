@@ -404,7 +404,7 @@ class QACriterionClevr(nn.Module):
         )
         attr_acc = (output["pred_answer_attr"].argmax(-1)) == answers["answer_attr"]
         loss["accuracy_answer_attr"] = (
-            attr_acc[is_attr].sum() / is_attr.sum() if is_attr.any() else torch.as_tensor(1.0)
+            attr_acc[is_attr].cpu().sum() / is_attr.cpu().sum() if is_attr.any() else torch.as_tensor(1.0)
         )
 
         loss["accuracy_answer_total"] = (
