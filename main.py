@@ -473,7 +473,7 @@ def main(args):
         return evaluator_list
 
     # Runs only evaluation, by default on the validation set unless --test is passed.
-    if args.eval:
+    if args.test:
         test_stats = {}
         test_model = model_ema if model_ema is not None else model
         for i, item in enumerate(val_tuples):
