@@ -17,7 +17,7 @@ class ViGQAQuestion(torch.utils.data.Dataset):
         with open(ques_file, "r") as f:
             self.questions = json.load(f)["questions"]
         with open(ann_file, "r") as f:
-            self.annotation_map = {
+            self.answer_map = {
                 it["question_id"]: it["multiple_choice_answer"]
                 for it in json.load(f)["annotations"]
             }
@@ -37,7 +37,7 @@ class ViGQAQuestion(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         question = self.questions[idx]
-        answer = self.annotation_map[question["question_id"]]['multiple_choice_answer']
+        answer = self.answer_map[question["question_id"]]
         img = Image.open(os.path.join(self.root, question["image_filename"])).convert("RGB")
         target = {
             "questionId": question["question_id"], "caption": question["question"],
