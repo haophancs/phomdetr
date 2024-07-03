@@ -134,7 +134,6 @@ def evaluate(
     device: torch.device,
     args,
 ):
-    model = model.to(device)
     model.eval()
     if criterion is not None:
         criterion.eval()
