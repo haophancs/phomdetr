@@ -6,6 +6,7 @@ import torchvision
 from .mixed import CustomCocoDetection
 from .mixed import build as build_mixed
 from .viclevr import build as build_viclevr
+from .vigqa import build as build_vigqa
 
 
 def get_coco_api_from_dataset(dataset):
@@ -21,4 +22,6 @@ def get_coco_api_from_dataset(dataset):
 def build_dataset(dataset_file: str, image_set: str, args):
     if "viclevr" in dataset_file:
         return build_viclevr(image_set, args)
+    if "vigqa" in dataset_file:
+        return build_vigqa(image_set, args)
     raise ValueError(f"dataset {dataset_file} not supported")
